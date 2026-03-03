@@ -1,0 +1,5 @@
+{
+  "name": "NotebookAI",
+  "description": "A personal research assistant inspired by NotebookLM, featuring source grounding, instant summaries, citations, and AI-generated audio overviews.",
+  "requestFramePermissions": ["microphone"]
+}
