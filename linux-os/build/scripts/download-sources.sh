@@ -54,22 +54,31 @@ echo "  ✓ Downloaded"
 echo "→ Wine $WINE_VERSION..."
 mkdir -p "$SRC_DIR/wine"
 cd "$SRC_DIR/wine"
-if [ ! -f "wine-${WINE_VERSION}.tar.xz" ]; then
-    # Try primary source (8.x and earlier)
-    wget https://dl.winehq.org/wine/source/8.x/wine-${WINE_VERSION}.tar.xz 2>&1 | grep -v "^--" || \
-    # Fallback to GitHub mirror
-    wget https://github.com/wine-mirror/wine/archive/refs/tags/wine-${WINE_VERSION}.tar.gz -O wine-${WINE_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
-        echo "ERROR: Failed to download Wine $WINE_VERSION"
-        exit 1
-    }
-    echo "  ✓ Downloaded"
-fi
 if [ ! -d "wine-${WINE_VERSION}" ]; then
-    tar -xf wine-${WINE_VERSION}.tar.xz 2>/dev/null || tar -xzf wine-${WINE_VERSION}.tar.xz 2>/dev/null || {
-        echo "ERROR: Failed to extract Wine"
-        exit 1
+    # Try cloning from GitHub first (proxy-friendly)
+    TMPDIR=$(mktemp -d)
+    git clone --depth 1 https://github.com/wine-mirror/wine.git "$TMPDIR" 2>/dev/null && {
+        cd "$TMPDIR"
+        # Try to checkout the specific version tag
+        git fetch --depth=100 origin tag wine-${WINE_VERSION} 2>/dev/null && git checkout wine-${WINE_VERSION} 2>/dev/null
+        # Remove .git directory to save space
+        rm -rf .git .gitignore
+        cd - > /dev/null
+        mv "$TMPDIR" "wine-${WINE_VERSION}"
+    } || {
+        rm -rf "$TMPDIR"
+        # Fallback to direct download from winehq.org
+        wget https://dl.winehq.org/wine/source/8.x/wine-${WINE_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
+            echo "ERROR: Failed to download Wine $WINE_VERSION"
+            exit 1
+        }
+        tar -xf wine-${WINE_VERSION}.tar.xz || {
+            echo "ERROR: Failed to extract Wine"
+            exit 1
+        }
     }
 fi
+echo "  ✓ Downloaded"
 
 # BusyBox
 echo "→ BusyBox $BUSYBOX_VERSION..."
