@@ -1,0 +1,80 @@
+#!/bin/bash
+
+# Download all required sources for Linux OS build
+
+set -e
+
+KERNEL_VERSION=${1:-6.8.1}
+WINE_VERSION=${2:-9.0}
+BUSYBOX_VERSION=${3:-1.36.1}
+GRUB_VERSION=${4:-2.12}
+MUSL_VERSION=${5:-1.2.5}
+
+SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/src"
+BUILD_DIR="$(dirname "${BASH_SOURCE[0]}")/.."
+
+echo "Downloading sources..."
+echo "  Kernel: $KERNEL_VERSION"
+echo "  Wine: $WINE_VERSION"
+echo "  BusyBox: $BUSYBOX_VERSION"
+echo "  GRUB: $GRUB_VERSION"
+echo "  musl: $MUSL_VERSION"
+echo ""
+
+# Kernel
+echo "→ Linux kernel $KERNEL_VERSION..."
+cd "$SRC_DIR/kernel"
+if [ ! -f "linux-${KERNEL_VERSION}.tar.xz" ]; then
+    wget -q https://www.kernel.org/pub/linux/kernel/v6.x/linux-${KERNEL_VERSION}.tar.xz
+    echo "  ✓ Downloaded"
+fi
+if [ ! -d "linux-${KERNEL_VERSION}" ]; then
+    tar -xf linux-${KERNEL_VERSION}.tar.xz
+fi
+
+# Wine
+echo "→ Wine $WINE_VERSION..."
+cd "$SRC_DIR/wine"
+if [ ! -f "wine-${WINE_VERSION}.tar.xz" ]; then
+    wget -q https://dl.winehq.org/wine/source/9.x/wine-${WINE_VERSION}.tar.xz
+    echo "  ✓ Downloaded"
+fi
+if [ ! -d "wine-${WINE_VERSION}" ]; then
+    tar -xf wine-${WINE_VERSION}.tar.xz
+fi
+
+# BusyBox
+echo "→ BusyBox $BUSYBOX_VERSION..."
+cd "$SRC_DIR/busybox"
+if [ ! -f "busybox-${BUSYBOX_VERSION}.tar.bz2" ]; then
+    wget -q https://busybox.net/downloads/busybox-${BUSYBOX_VERSION}.tar.bz2
+    echo "  ✓ Downloaded"
+fi
+if [ ! -d "busybox-${BUSYBOX_VERSION}" ]; then
+    tar -xf busybox-${BUSYBOX_VERSION}.tar.bz2
+fi
+
+# GRUB
+echo "→ GRUB $GRUB_VERSION..."
+cd "$SRC_DIR/grub"
+if [ ! -f "grub-${GRUB_VERSION}.tar.xz" ]; then
+    wget -q https://ftp.gnu.org/gnu/grub/grub-${GRUB_VERSION}.tar.xz
+    echo "  ✓ Downloaded"
+fi
+if [ ! -d "grub-${GRUB_VERSION}" ]; then
+    tar -xf grub-${GRUB_VERSION}.tar.xz
+fi
+
+# musl
+echo "→ musl $MUSL_VERSION..."
+cd "$SRC_DIR/musl"
+if [ ! -f "musl-${MUSL_VERSION}.tar.gz" ]; then
+    wget -q https://musl.libc.org/releases/musl-${MUSL_VERSION}.tar.gz
+    echo "  ✓ Downloaded"
+fi
+if [ ! -d "musl-${MUSL_VERSION}" ]; then
+    tar -xf musl-${MUSL_VERSION}.tar.gz
+fi
+
+echo ""
+echo "✓ All sources downloaded and extracted"

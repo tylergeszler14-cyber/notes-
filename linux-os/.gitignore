@@ -1,0 +1,35 @@
+# Build artifacts
+src/*/
+rootfs/
+iso/
+build/tools/
+
+# Temporary files
+*.o
+*.a
+*.so
+*.so.*
+*.log
+.config
+.config.old
+
+# Build caches
+*.tar.gz
+*.tar.xz
+*.tar.bz2
+*.zip
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build system
+build.log
+.build-*
