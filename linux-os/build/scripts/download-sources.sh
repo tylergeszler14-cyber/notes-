@@ -23,8 +23,9 @@ echo ""
 echo "→ Linux kernel $KERNEL_VERSION..."
 mkdir -p "$SRC_DIR/kernel"
 cd "$SRC_DIR/kernel"
+KERNEL_MAJOR=$(echo $KERNEL_VERSION | cut -d. -f1)
 if [ ! -f "linux-${KERNEL_VERSION}.tar.xz" ]; then
-    wget https://www.kernel.org/pub/linux/kernel/v6.x/linux-${KERNEL_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
+    wget https://www.kernel.org/pub/linux/kernel/v${KERNEL_MAJOR}.x/linux-${KERNEL_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
         echo "ERROR: Failed to download kernel"
         exit 1
     }
