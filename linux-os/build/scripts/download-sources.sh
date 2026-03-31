@@ -42,8 +42,8 @@ echo "→ Wine $WINE_VERSION..."
 mkdir -p "$SRC_DIR/wine"
 cd "$SRC_DIR/wine"
 if [ ! -f "wine-${WINE_VERSION}.tar.xz" ]; then
-    # Try primary source
-    wget https://dl.winehq.org/wine/source/9.x/wine-${WINE_VERSION}.tar.xz 2>&1 | grep -v "^--" || \
+    # Try primary source (8.x and earlier)
+    wget https://dl.winehq.org/wine/source/8.x/wine-${WINE_VERSION}.tar.xz 2>&1 | grep -v "^--" || \
     # Fallback to GitHub mirror
     wget https://github.com/wine-mirror/wine/archive/refs/tags/wine-${WINE_VERSION}.tar.gz -O wine-${WINE_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
         echo "ERROR: Failed to download Wine $WINE_VERSION"
