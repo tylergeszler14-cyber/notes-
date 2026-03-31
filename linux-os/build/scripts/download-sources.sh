@@ -23,20 +23,32 @@ echo ""
 echo "→ Linux kernel $KERNEL_VERSION..."
 mkdir -p "$SRC_DIR/kernel"
 cd "$SRC_DIR/kernel"
-KERNEL_MAJOR=$(echo $KERNEL_VERSION | cut -d. -f1)
-if [ ! -f "linux-${KERNEL_VERSION}.tar.xz" ]; then
-    wget https://www.kernel.org/pub/linux/kernel/v${KERNEL_MAJOR}.x/linux-${KERNEL_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
-        echo "ERROR: Failed to download kernel"
-        exit 1
-    }
-    echo "  ✓ Downloaded"
-fi
 if [ ! -d "linux-${KERNEL_VERSION}" ]; then
-    tar -xf linux-${KERNEL_VERSION}.tar.xz || {
-        echo "ERROR: Failed to extract kernel"
-        exit 1
+    # Try cloning from GitHub first (proxy-friendly)
+    TMPDIR=$(mktemp -d)
+    git clone --depth 1 https://github.com/torvalds/linux.git "$TMPDIR" 2>/dev/null && {
+        cd "$TMPDIR"
+        # Try to checkout the specific version tag
+        git fetch --depth=100 origin tag v${KERNEL_VERSION} 2>/dev/null && git checkout v${KERNEL_VERSION} 2>/dev/null
+        # Remove .git directory to save space
+        rm -rf .git .gitignore
+        cd - > /dev/null
+        mv "$TMPDIR" "linux-${KERNEL_VERSION}"
+    } || {
+        rm -rf "$TMPDIR"
+        # Fallback to direct download from kernel.org
+        KERNEL_MAJOR=$(echo $KERNEL_VERSION | cut -d. -f1)
+        wget https://www.kernel.org/pub/linux/kernel/v${KERNEL_MAJOR}.x/linux-${KERNEL_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
+            echo "ERROR: Failed to download kernel from both GitHub and kernel.org"
+            exit 1
+        }
+        tar -xf linux-${KERNEL_VERSION}.tar.xz || {
+            echo "ERROR: Failed to extract kernel"
+            exit 1
+        }
     }
 fi
+echo "  ✓ Downloaded"
 
 # Wine
 echo "→ Wine $WINE_VERSION..."
