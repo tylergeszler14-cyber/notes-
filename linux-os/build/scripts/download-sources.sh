@@ -84,37 +84,87 @@ echo "  ✓ Downloaded"
 echo "→ BusyBox $BUSYBOX_VERSION..."
 mkdir -p "$SRC_DIR/busybox"
 cd "$SRC_DIR/busybox"
-if [ ! -f "busybox-${BUSYBOX_VERSION}.tar.bz2" ]; then
-    wget -q https://busybox.net/downloads/busybox-${BUSYBOX_VERSION}.tar.bz2
-    echo "  ✓ Downloaded"
-fi
 if [ ! -d "busybox-${BUSYBOX_VERSION}" ]; then
-    tar -xf busybox-${BUSYBOX_VERSION}.tar.bz2
+    # Try cloning from GitHub first (proxy-friendly)
+    TMPDIR=$(mktemp -d)
+    git clone --depth 1 https://github.com/mirror/busybox.git "$TMPDIR" 2>/dev/null && {
+        cd "$TMPDIR"
+        # BusyBox uses _ in tag names instead of .
+        TAG_NAME=$(echo ${BUSYBOX_VERSION} | tr . _)
+        git fetch --depth=100 origin tag ${TAG_NAME} 2>/dev/null && git checkout ${TAG_NAME} 2>/dev/null
+        rm -rf .git .gitignore
+        cd - > /dev/null
+        mv "$TMPDIR" "busybox-${BUSYBOX_VERSION}"
+    } || {
+        rm -rf "$TMPDIR"
+        # Fallback to direct download from busybox.net
+        wget -q https://busybox.net/downloads/busybox-${BUSYBOX_VERSION}.tar.bz2 || {
+            echo "ERROR: Failed to download BusyBox $BUSYBOX_VERSION"
+            exit 1
+        }
+        tar -xf busybox-${BUSYBOX_VERSION}.tar.bz2 || {
+            echo "ERROR: Failed to extract BusyBox"
+            exit 1
+        }
+    }
 fi
+echo "  ✓ Downloaded"
 
 # GRUB
 echo "→ GRUB $GRUB_VERSION..."
 mkdir -p "$SRC_DIR/grub"
 cd "$SRC_DIR/grub"
-if [ ! -f "grub-${GRUB_VERSION}.tar.xz" ]; then
-    wget -q https://ftp.gnu.org/gnu/grub/grub-${GRUB_VERSION}.tar.xz
-    echo "  ✓ Downloaded"
-fi
 if [ ! -d "grub-${GRUB_VERSION}" ]; then
-    tar -xf grub-${GRUB_VERSION}.tar.xz
+    # Try cloning from GitHub first (proxy-friendly)
+    TMPDIR=$(mktemp -d)
+    git clone --depth 1 https://github.com/mirror/grub.git "$TMPDIR" 2>/dev/null && {
+        cd "$TMPDIR"
+        git fetch --depth=100 origin tag grub-${GRUB_VERSION} 2>/dev/null && git checkout grub-${GRUB_VERSION} 2>/dev/null
+        rm -rf .git .gitignore
+        cd - > /dev/null
+        mv "$TMPDIR" "grub-${GRUB_VERSION}"
+    } || {
+        rm -rf "$TMPDIR"
+        # Fallback to direct download from gnu.org
+        wget -q https://ftp.gnu.org/gnu/grub/grub-${GRUB_VERSION}.tar.xz || {
+            echo "ERROR: Failed to download GRUB $GRUB_VERSION"
+            exit 1
+        }
+        tar -xf grub-${GRUB_VERSION}.tar.xz || {
+            echo "ERROR: Failed to extract GRUB"
+            exit 1
+        }
+    }
 fi
+echo "  ✓ Downloaded"
 
 # musl
 echo "→ musl $MUSL_VERSION..."
 mkdir -p "$SRC_DIR/musl"
 cd "$SRC_DIR/musl"
-if [ ! -f "musl-${MUSL_VERSION}.tar.gz" ]; then
-    wget -q https://musl.libc.org/releases/musl-${MUSL_VERSION}.tar.gz
-    echo "  ✓ Downloaded"
-fi
 if [ ! -d "musl-${MUSL_VERSION}" ]; then
-    tar -xf musl-${MUSL_VERSION}.tar.gz
+    # Try cloning from GitHub first (proxy-friendly)
+    TMPDIR=$(mktemp -d)
+    git clone --depth 1 https://github.com/mirror/musl.git "$TMPDIR" 2>/dev/null && {
+        cd "$TMPDIR"
+        git fetch --depth=100 origin tag v${MUSL_VERSION} 2>/dev/null && git checkout v${MUSL_VERSION} 2>/dev/null
+        rm -rf .git .gitignore
+        cd - > /dev/null
+        mv "$TMPDIR" "musl-${MUSL_VERSION}"
+    } || {
+        rm -rf "$TMPDIR"
+        # Fallback to direct download from musl.libc.org
+        wget -q https://musl.libc.org/releases/musl-${MUSL_VERSION}.tar.gz || {
+            echo "ERROR: Failed to download musl $MUSL_VERSION"
+            exit 1
+        }
+        tar -xf musl-${MUSL_VERSION}.tar.gz || {
+            echo "ERROR: Failed to extract musl"
+            exit 1
+        }
+    }
 fi
+echo "  ✓ Downloaded"
 
 echo ""
 echo "✓ All sources downloaded and extracted"
