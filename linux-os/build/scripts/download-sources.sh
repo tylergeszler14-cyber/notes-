@@ -23,6 +23,7 @@ echo ""
 
 # Kernel
 echo "→ Linux kernel $KERNEL_VERSION..."
+mkdir -p "$SRC_DIR/kernel"
 cd "$SRC_DIR/kernel"
 if [ ! -f "linux-${KERNEL_VERSION}.tar.xz" ]; then
     wget -q https://www.kernel.org/pub/linux/kernel/v6.x/linux-${KERNEL_VERSION}.tar.xz
@@ -34,6 +35,7 @@ fi
 
 # Wine
 echo "→ Wine $WINE_VERSION..."
+mkdir -p "$SRC_DIR/wine"
 cd "$SRC_DIR/wine"
 if [ ! -f "wine-${WINE_VERSION}.tar.xz" ]; then
     wget -q https://dl.winehq.org/wine/source/9.x/wine-${WINE_VERSION}.tar.xz
@@ -45,6 +47,7 @@ fi
 
 # BusyBox
 echo "→ BusyBox $BUSYBOX_VERSION..."
+mkdir -p "$SRC_DIR/busybox"
 cd "$SRC_DIR/busybox"
 if [ ! -f "busybox-${BUSYBOX_VERSION}.tar.bz2" ]; then
     wget -q https://busybox.net/downloads/busybox-${BUSYBOX_VERSION}.tar.bz2
@@ -56,6 +59,7 @@ fi
 
 # GRUB
 echo "→ GRUB $GRUB_VERSION..."
+mkdir -p "$SRC_DIR/grub"
 cd "$SRC_DIR/grub"
 if [ ! -f "grub-${GRUB_VERSION}.tar.xz" ]; then
     wget -q https://ftp.gnu.org/gnu/grub/grub-${GRUB_VERSION}.tar.xz
@@ -67,6 +71,7 @@ fi
 
 # musl
 echo "→ musl $MUSL_VERSION..."
+mkdir -p "$SRC_DIR/musl"
 cd "$SRC_DIR/musl"
 if [ ! -f "musl-${MUSL_VERSION}.tar.gz" ]; then
     wget -q https://musl.libc.org/releases/musl-${MUSL_VERSION}.tar.gz
