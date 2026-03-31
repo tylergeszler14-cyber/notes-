@@ -24,11 +24,17 @@ echo "→ Linux kernel $KERNEL_VERSION..."
 mkdir -p "$SRC_DIR/kernel"
 cd "$SRC_DIR/kernel"
 if [ ! -f "linux-${KERNEL_VERSION}.tar.xz" ]; then
-    wget -q https://www.kernel.org/pub/linux/kernel/v6.x/linux-${KERNEL_VERSION}.tar.xz
+    wget https://www.kernel.org/pub/linux/kernel/v6.x/linux-${KERNEL_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
+        echo "ERROR: Failed to download kernel"
+        exit 1
+    }
     echo "  ✓ Downloaded"
 fi
 if [ ! -d "linux-${KERNEL_VERSION}" ]; then
-    tar -xf linux-${KERNEL_VERSION}.tar.xz
+    tar -xf linux-${KERNEL_VERSION}.tar.xz || {
+        echo "ERROR: Failed to extract kernel"
+        exit 1
+    }
 fi
 
 # Wine
@@ -36,11 +42,20 @@ echo "→ Wine $WINE_VERSION..."
 mkdir -p "$SRC_DIR/wine"
 cd "$SRC_DIR/wine"
 if [ ! -f "wine-${WINE_VERSION}.tar.xz" ]; then
-    wget -q https://dl.winehq.org/wine/source/9.x/wine-${WINE_VERSION}.tar.xz
+    # Try primary source
+    wget https://dl.winehq.org/wine/source/9.x/wine-${WINE_VERSION}.tar.xz 2>&1 | grep -v "^--" || \
+    # Fallback to GitHub mirror
+    wget https://github.com/wine-mirror/wine/archive/refs/tags/wine-${WINE_VERSION}.tar.gz -O wine-${WINE_VERSION}.tar.xz 2>&1 | grep -v "^--" || {
+        echo "ERROR: Failed to download Wine $WINE_VERSION"
+        exit 1
+    }
     echo "  ✓ Downloaded"
 fi
 if [ ! -d "wine-${WINE_VERSION}" ]; then
-    tar -xf wine-${WINE_VERSION}.tar.xz
+    tar -xf wine-${WINE_VERSION}.tar.xz 2>/dev/null || tar -xzf wine-${WINE_VERSION}.tar.xz 2>/dev/null || {
+        echo "ERROR: Failed to extract Wine"
+        exit 1
+    }
 fi
 
 # BusyBox
