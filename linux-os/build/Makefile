@@ -108,7 +108,13 @@ run-vm: create-iso
 	@echo "$(GREEN)Ctrl+Alt+G to release mouse, Ctrl+C to quit$(NC)"
 	@qemu-system-x86_64 -m 2G -smp 4 -cdrom $(ISO_DIR)/linux-wine.iso -display gtk
 
-all: check-deps download-sources build-kernel build-base-system build-wine build-rootfs create-iso
+all: check-deps
+	@$(MAKE) download-sources
+	@$(MAKE) build-kernel
+	@$(MAKE) build-base-system
+	@$(MAKE) build-wine
+	@$(MAKE) build-rootfs
+	@$(MAKE) create-iso
 	@echo ""
 	@echo "$(GREEN)✓ BUILD COMPLETE!$(NC)"
 	@echo "$(GREEN)Bootable ISO: $(ISO_DIR)/linux-wine.iso$(NC)"
