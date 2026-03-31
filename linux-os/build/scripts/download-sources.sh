@@ -4,15 +4,12 @@
 
 set -e
 
-KERNEL_VERSION=${1:-6.8.1}
-WINE_VERSION=${2:-9.0}
-BUSYBOX_VERSION=${3:-1.36.1}
-GRUB_VERSION=${4:-2.12}
-MUSL_VERSION=${5:-1.2.5}
-
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-BUILD_DIR="$(dirname "$SCRIPT_DIR")"
-SRC_DIR="$(dirname "$BUILD_DIR")/src"
+SRC_DIR=${1:-.}
+KERNEL_VERSION=${2:-6.8.1}
+WINE_VERSION=${3:-9.0}
+BUSYBOX_VERSION=${4:-1.36.1}
+GRUB_VERSION=${5:-2.12}
+MUSL_VERSION=${6:-1.2.5}
 
 echo "Downloading sources..."
 echo "  Kernel: $KERNEL_VERSION"

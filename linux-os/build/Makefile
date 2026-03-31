@@ -73,7 +73,7 @@ check-deps:
 
 download-sources:
 	@echo "$(YELLOW)Downloading sources (this may take 10-30 minutes)...$(NC)"
-	@bash $(SCRIPTS_DIR)/download-sources.sh $(KERNEL_VERSION) $(WINE_VERSION) $(BUSYBOX_VERSION) $(GRUB_VERSION) $(MUSL_VERSION)
+	@bash $(SCRIPTS_DIR)/download-sources.sh $(SRC_DIR) $(KERNEL_VERSION) $(WINE_VERSION) $(BUSYBOX_VERSION) $(GRUB_VERSION) $(MUSL_VERSION)
 	@echo "$(GREEN)✓ Sources downloaded$(NC)"
 
 build-kernel:
