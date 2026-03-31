@@ -112,31 +112,9 @@ echo "  ✓ Downloaded"
 
 # GRUB
 echo "→ GRUB $GRUB_VERSION..."
-mkdir -p "$SRC_DIR/grub"
-cd "$SRC_DIR/grub"
-if [ ! -d "grub-${GRUB_VERSION}" ]; then
-    # Try cloning from GitHub first (proxy-friendly)
-    TMPDIR=$(mktemp -d)
-    git clone --depth 1 https://github.com/mirror/grub.git "$TMPDIR" 2>/dev/null && {
-        cd "$TMPDIR"
-        git fetch --depth=100 origin tag grub-${GRUB_VERSION} 2>/dev/null && git checkout grub-${GRUB_VERSION} 2>/dev/null
-        rm -rf .git .gitignore
-        cd - > /dev/null
-        mv "$TMPDIR" "grub-${GRUB_VERSION}"
-    } || {
-        rm -rf "$TMPDIR"
-        # Fallback to direct download from gnu.org
-        wget -q https://ftp.gnu.org/gnu/grub/grub-${GRUB_VERSION}.tar.xz || {
-            echo "ERROR: Failed to download GRUB $GRUB_VERSION"
-            exit 1
-        }
-        tar -xf grub-${GRUB_VERSION}.tar.xz || {
-            echo "ERROR: Failed to extract GRUB"
-            exit 1
-        }
-    }
-fi
-echo "  ✓ Downloaded"
+# Note: GRUB is not needed for building - we only use grub-mkrescue command
+# which is already installed on the system. Skipping source download.
+echo "  ⓘ Using system-installed grub-mkrescue (sources not needed)"
 
 # musl
 echo "→ musl $MUSL_VERSION..."
