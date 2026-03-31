@@ -121,9 +121,9 @@ EOF
 # Oldconfig to handle missing options
 make oldconfig < /dev/null
 
-# Build kernel
+# Build kernel with C99 to avoid C23 conflicts
 echo "→ Compiling kernel (this may take 20-30 minutes)..."
-make -j$JOBS bzImage 2>&1 | tail -20
+make -j$JOBS KCFLAGS="-std=gnu99" bzImage 2>&1 | tail -20
 
 # Extract kernel
 echo "→ Installing kernel..."
