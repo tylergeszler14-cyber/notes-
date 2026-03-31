@@ -78,7 +78,7 @@ download-sources:
 
 build-kernel:
 	@echo "$(YELLOW)Building Linux kernel $(KERNEL_VERSION)...$(NC)"
-	@bash $(SCRIPTS_DIR)/build-kernel.sh $(SRC_DIR) $(ROOTFS_DIR) $(JOBS)
+	@bash $(SCRIPTS_DIR)/build-kernel.sh $(SRC_DIR) $(ROOTFS_DIR) $(KERNEL_VERSION) $(JOBS)
 	@echo "$(GREEN)✓ Kernel built and installed$(NC)"
 
 build-wine:

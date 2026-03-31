@@ -6,9 +6,9 @@ set -e
 
 SRC_DIR=${1:-.}
 ROOTFS_DIR=${2:-../rootfs}
-JOBS=${3:-$(nproc)}
+KERNEL_VERSION=${3:-6.10}
+JOBS=${4:-$(nproc)}
 
-KERNEL_VERSION="6.8.1"
 KERNEL_SRC="$SRC_DIR/kernel/linux-${KERNEL_VERSION}"
 
 if [ ! -d "$KERNEL_SRC" ]; then
