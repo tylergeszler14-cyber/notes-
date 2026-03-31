@@ -10,8 +10,9 @@ BUSYBOX_VERSION=${3:-1.36.1}
 GRUB_VERSION=${4:-2.12}
 MUSL_VERSION=${5:-1.2.5}
 
-SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/src"
-BUILD_DIR="$(dirname "${BASH_SOURCE[0]}")/.."
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BUILD_DIR="$(dirname "$SCRIPT_DIR")"
+SRC_DIR="$(dirname "$BUILD_DIR")/src"
 
 echo "Downloading sources..."
 echo "  Kernel: $KERNEL_VERSION"
