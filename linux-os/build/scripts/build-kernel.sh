@@ -119,7 +119,7 @@ CONFIG_PAGEFLAGS_EXTENDED=y
 EOF
 
 # Oldconfig to handle missing options
-yes "" | make oldconfig 2>&1 | grep -v "^warning" | tail -5
+yes "" | make oldconfig >/dev/null 2>&1
 
 # Build kernel
 echo "→ Compiling kernel (this may take 20-30 minutes)..."

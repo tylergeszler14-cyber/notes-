@@ -117,7 +117,7 @@ CONFIG_STATIC_LIBGCC=y
 LDFLAGS="-Wl,--strip-all"
 EOF
 
-yes "" | make oldconfig 2>&1 | grep -v "^warning" | tail -5
+yes "" | make oldconfig >/dev/null 2>&1
 make -j$JOBS 2>&1 | tail -20
 make CONFIG_PREFIX="$ROOTFS_DIR" install
 
