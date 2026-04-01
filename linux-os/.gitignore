@@ -1,7 +1,6 @@
 # Build artifacts
 src/*/
 rootfs/
-iso/
 build/tools/
 
 # Temporary files
