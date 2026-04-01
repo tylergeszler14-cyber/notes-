@@ -41,6 +41,7 @@ import ChatInterface from './components/ChatInterface';
 import NotebookGuideView from './components/NotebookGuideView';
 import AudioOverview from './components/AudioOverview';
 import MindMap from './components/MindMap';
+import AIAssistant from './components/AIAssistant';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -51,7 +52,7 @@ export default function App() {
     const saved = localStorage.getItem('notebook_sources');
     return saved ? JSON.parse(saved) : [];
   });
-  const [activeTab, setActiveTab] = useState<'chat' | 'guide' | 'mindmap' | 'audio'>('chat');
+  const [activeTab, setActiveTab] = useState<'chat' | 'guide' | 'mindmap' | 'audio' | 'assistant'>('chat');
   const [isLoading, setIsLoading] = useState(false);
   const [guide, setGuide] = useState<NotebookGuide | null>(null);
   const [theme, setTheme] = useState<Theme>(() => {
@@ -215,9 +216,10 @@ export default function App() {
               Research Workspace
             </div>
             <h1 className="text-3xl md:text-6xl font-black tracking-tighter" style={{ color: theme.text }}>
-              {activeTab === 'chat' ? 'Notebook Chat' : 
-               activeTab === 'guide' ? 'Notebook Guide' : 
-               activeTab === 'mindmap' ? 'Knowledge Map' : 'Audio Overview'}
+              {activeTab === 'chat' ? 'Notebook Chat' :
+               activeTab === 'guide' ? 'Notebook Guide' :
+               activeTab === 'mindmap' ? 'Knowledge Map' :
+               activeTab === 'audio' ? 'Audio Overview' : 'Claude AI'}
             </h1>
           </div>
 
@@ -228,6 +230,7 @@ export default function App() {
               { id: 'guide', label: 'Guide' },
               { id: 'mindmap', label: 'Map' },
               { id: 'audio', label: 'Audio' },
+              { id: 'assistant', label: 'Claude AI' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -260,6 +263,7 @@ export default function App() {
               {activeTab === 'guide' && <NotebookGuideView guide={guide} isLoading={isLoading} theme={theme} />}
               {activeTab === 'mindmap' && <MindMap sources={sources} theme={theme} />}
               {activeTab === 'audio' && <AudioOverview sources={sources} theme={theme} />}
+              {activeTab === 'assistant' && <AIAssistant theme={theme} />}
             </motion.div>
           </AnimatePresence>
         </div>
