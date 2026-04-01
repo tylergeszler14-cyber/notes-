@@ -1,0 +1,27 @@
+appId: com.local-ai.desktop
+productName: Local AI
+copyright: Copyright © 2025
+
+# Entry point — the compiled Electron main process
+directories:
+  output: release
+  buildResources: build
+
+files:
+  - dist/**/*        # Vite-built renderer
+  - out/electron/**/* # Compiled Electron main + preload
+  - package.json
+
+# The 'main' field in package.json points here
+# asar bundles everything into a single archive
+
+mac:
+  target: dmg
+  category: public.app-category.productivity
+
+win:
+  target: nsis
+
+linux:
+  target: AppImage
+  category: Utility

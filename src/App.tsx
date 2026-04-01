@@ -42,6 +42,7 @@ import NotebookGuideView from './components/NotebookGuideView';
 import AudioOverview from './components/AudioOverview';
 import MindMap from './components/MindMap';
 import AIAssistant from './components/AIAssistant';
+import LocalAI from './components/LocalAI';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -52,7 +53,7 @@ export default function App() {
     const saved = localStorage.getItem('notebook_sources');
     return saved ? JSON.parse(saved) : [];
   });
-  const [activeTab, setActiveTab] = useState<'chat' | 'guide' | 'mindmap' | 'audio' | 'assistant'>('chat');
+  const [activeTab, setActiveTab] = useState<'chat' | 'guide' | 'mindmap' | 'audio' | 'assistant' | 'local'>('chat');
   const [isLoading, setIsLoading] = useState(false);
   const [guide, setGuide] = useState<NotebookGuide | null>(null);
   const [theme, setTheme] = useState<Theme>(() => {
@@ -219,7 +220,8 @@ export default function App() {
               {activeTab === 'chat' ? 'Notebook Chat' :
                activeTab === 'guide' ? 'Notebook Guide' :
                activeTab === 'mindmap' ? 'Knowledge Map' :
-               activeTab === 'audio' ? 'Audio Overview' : 'Claude AI'}
+               activeTab === 'audio' ? 'Audio Overview' :
+               activeTab === 'assistant' ? 'Claude AI' : 'Local AI'}
             </h1>
           </div>
 
@@ -231,6 +233,7 @@ export default function App() {
               { id: 'mindmap', label: 'Map' },
               { id: 'audio', label: 'Audio' },
               { id: 'assistant', label: 'Claude AI' },
+              { id: 'local', label: 'Local AI' },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -264,6 +267,7 @@ export default function App() {
               {activeTab === 'mindmap' && <MindMap sources={sources} theme={theme} />}
               {activeTab === 'audio' && <AudioOverview sources={sources} theme={theme} />}
               {activeTab === 'assistant' && <AIAssistant theme={theme} />}
+              {activeTab === 'local' && <LocalAI theme={theme} />}
             </motion.div>
           </AnimatePresence>
         </div>
