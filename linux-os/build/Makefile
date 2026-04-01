@@ -1,4 +1,4 @@
-.PHONY: all check-deps download-sources build-kernel build-wine build-base-system bootstrap-desktop build-x11 build-gtk3 build-openbox build-rootfs create-iso run-vm clean help
+.PHONY: all check-deps download-sources build-kernel build-wine bootstrap-wine build-base-system bootstrap-desktop build-x11 build-gtk3 build-openbox build-rootfs create-iso run-vm clean help
 
 # Color output
 RED := \033[0;31m
@@ -43,10 +43,11 @@ help:
 	@echo "  make build-kernel        - Build Linux kernel"
 	@echo "  make build-base-system   - Build base userland"
 	@echo "  make bootstrap-desktop   - Quick: Copy X11/GTK from system"
+	@echo "  make bootstrap-wine      - Quick: Setup Wine environment"
 	@echo "  make build-x11           - Build X11/Xorg display server"
 	@echo "  make build-gtk3          - Build GTK3 UI toolkit"
 	@echo "  make build-openbox       - Build Openbox window manager"
-	@echo "  make build-wine          - Build Wine (LONGEST STEP - 2-4 hours)"
+	@echo "  make build-wine          - Full: Build Wine from source (2-4 hrs)"
 	@echo "  make build-rootfs        - Assemble root filesystem"
 	@echo "  make create-iso          - Create bootable ISO"
 	@echo "  make run-vm              - Test in QEMU VM"
@@ -84,6 +85,11 @@ build-kernel:
 	@echo "$(YELLOW)Building Linux kernel $(KERNEL_VERSION)...$(NC)"
 	@bash $(SCRIPTS_DIR)/build-kernel.sh $(SRC_DIR) $(ROOTFS_DIR) $(KERNEL_VERSION) $(JOBS)
 	@echo "$(GREEN)✓ Kernel built and installed$(NC)"
+
+bootstrap-wine:
+	@echo "$(YELLOW)Bootstrapping Wine environment...$(NC)"
+	@bash $(SCRIPTS_DIR)/bootstrap-wine.sh $(ROOTFS_DIR)
+	@echo "$(GREEN)✓ Wine bootstrapped$(NC)"
 
 build-wine:
 	@echo "$(YELLOW)Building Wine $(WINE_VERSION)...$(NC)"
@@ -137,7 +143,7 @@ all: check-deps
 	@$(MAKE) build-kernel
 	@$(MAKE) build-base-system
 	@$(MAKE) bootstrap-desktop
-	@$(MAKE) build-wine
+	@$(MAKE) bootstrap-wine
 	@$(MAKE) build-rootfs
 	@$(MAKE) create-iso
 	@echo ""
