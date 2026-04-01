@@ -150,3 +150,6 @@ strip "$ROOTFS_DIR/boot/vmlinuz" 2>/dev/null || true
 echo ""
 echo "✓ Kernel built and installed"
 ls -lh "$ROOTFS_DIR/boot/vmlinuz"
+
+# Add to existing CONFIG before the EOF marker - update kernel for X11
+# (will be added in next step)
