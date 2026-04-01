@@ -53,10 +53,13 @@ else
     echo "WARNING: No kernel found at $ROOTFS_DIR/boot/vmlinuz"
 fi
 
-# Copy initramfs
+# Copy initramfs (gzipped or uncompressed)
 if [ -f "$ROOTFS_DIR/boot/initramfs.cpio.gz" ]; then
     cp "$ROOTFS_DIR/boot/initramfs.cpio.gz" "$ISO_TEMP/boot/"
-    echo "✓ Initramfs copied"
+    echo "✓ Initramfs (gzipped) copied"
+elif [ -f "$ROOTFS_DIR/boot/initramfs.cpio" ]; then
+    cp "$ROOTFS_DIR/boot/initramfs.cpio" "$ISO_TEMP/boot/"
+    echo "✓ Initramfs (uncompressed) copied"
 fi
 
 # Create rootfs tarball for live boot (optional - large)
