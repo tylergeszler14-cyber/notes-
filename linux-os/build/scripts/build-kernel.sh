@@ -25,6 +25,9 @@ cd "$KERNEL_SRC"
 
 # Create minimal kernel config
 echo "→ Generating minimal kernel configuration..."
+if [ -n "$INITRAMFS_FILE" ]; then
+    echo "  Using built-in initramfs: $INITRAMFS_FILE"
+fi
 cat > .config << 'EOF'
 # Minimal Linux kernel config for x86_64
 CONFIG_64BIT=y
@@ -80,7 +83,7 @@ CONFIG_USB_UHCI_HCD=y
 CONFIG_USB_HID=y
 CONFIG_HID=y
 
-# Initramfs/RAM disk support (CRITICAL for live boot)
+# Initramfs/RAM disk support
 CONFIG_BLK_DEV_INITRD=y
 CONFIG_BLK_DEV_RAM=y
 CONFIG_BLK_DEV_RAM_SIZE=131072
