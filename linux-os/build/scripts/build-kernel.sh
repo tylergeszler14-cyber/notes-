@@ -8,6 +8,7 @@ SRC_DIR=${1:-.}
 ROOTFS_DIR=${2:-../rootfs}
 KERNEL_VERSION=${3:-6.10}
 JOBS=${4:-$(nproc)}
+INITRAMFS_FILE=${5:-}
 
 KERNEL_SRC="$SRC_DIR/kernel/linux-${KERNEL_VERSION}"
 
@@ -79,12 +80,10 @@ CONFIG_USB_UHCI_HCD=y
 CONFIG_USB_HID=y
 CONFIG_HID=y
 
-# Built-in initramfs (cpio format)
+# Initramfs/RAM disk support (CRITICAL for live boot)
+CONFIG_BLK_DEV_INITRD=y
 CONFIG_BLK_DEV_RAM=y
 CONFIG_BLK_DEV_RAM_SIZE=131072
-CONFIG_RD_GZIP=y
-CONFIG_RD_BZIP2=y
-CONFIG_INITRAMFS_SOURCE=""
 
 # Remove bloat
 CONFIG_DEBUG_KERNEL=n
