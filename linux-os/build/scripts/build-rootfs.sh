@@ -180,7 +180,7 @@ README
 
 # Permissions
 chmod 644 "$ROOTFS_DIR"/etc/{hostname,hosts,profile,motd}
-chmod 755 "$ROOTFS_DIR"/etc/init.d/*
+chmod 755 "$ROOTFS_DIR"/etc/init.d/* 2>/dev/null || true
 
 echo ""
 echo "✓ Rootfs assembled"

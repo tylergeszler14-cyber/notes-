@@ -1,4 +1,4 @@
-.PHONY: all check-deps download-sources build-kernel build-wine build-base-system build-rootfs create-iso run-vm clean help
+.PHONY: all check-deps download-sources build-kernel build-wine build-base-system build-x11 build-gtk3 build-openbox build-rootfs create-iso run-vm clean help
 
 # Color output
 RED := \033[0;31m
@@ -41,8 +41,11 @@ help:
 	@echo "  make check-deps          - Check system dependencies"
 	@echo "  make download-sources    - Download all source code"
 	@echo "  make build-kernel        - Build Linux kernel"
-	@echo "  make build-wine          - Build Wine (LONGEST STEP - 2-4 hours)"
 	@echo "  make build-base-system   - Build base userland"
+	@echo "  make build-x11           - Build X11/Xorg display server"
+	@echo "  make build-gtk3          - Build GTK3 UI toolkit"
+	@echo "  make build-openbox       - Build Openbox window manager"
+	@echo "  make build-wine          - Build Wine (LONGEST STEP - 2-4 hours)"
 	@echo "  make build-rootfs        - Assemble root filesystem"
 	@echo "  make create-iso          - Create bootable ISO"
 	@echo "  make run-vm              - Test in QEMU VM"
@@ -92,6 +95,21 @@ build-base-system:
 	@bash $(SCRIPTS_DIR)/build-base-system.sh $(SRC_DIR) $(ROOTFS_DIR) $(JOBS)
 	@echo "$(GREEN)✓ Base system built$(NC)"
 
+build-x11:
+	@echo "$(YELLOW)Building X11/Xorg display server...$(NC)"
+	@bash $(SCRIPTS_DIR)/build-x11.sh $(SRC_DIR) $(ROOTFS_DIR)
+	@echo "$(GREEN)✓ X11/Xorg built$(NC)"
+
+build-gtk3:
+	@echo "$(YELLOW)Building GTK3 toolkit...$(NC)"
+	@bash $(SCRIPTS_DIR)/build-gtk3.sh $(SRC_DIR) $(ROOTFS_DIR)
+	@echo "$(GREEN)✓ GTK3 built$(NC)"
+
+build-openbox:
+	@echo "$(YELLOW)Building Openbox window manager...$(NC)"
+	@bash $(SCRIPTS_DIR)/build-openbox.sh $(SRC_DIR) $(ROOTFS_DIR)
+	@echo "$(GREEN)✓ Openbox built$(NC)"
+
 build-rootfs:
 	@echo "$(YELLOW)Assembling root filesystem...$(NC)"
 	@bash $(SCRIPTS_DIR)/build-rootfs.sh $(SRC_DIR) $(ROOTFS_DIR)
@@ -112,6 +130,9 @@ all: check-deps
 	@$(MAKE) download-sources
 	@$(MAKE) build-kernel
 	@$(MAKE) build-base-system
+	@$(MAKE) build-x11
+	@$(MAKE) build-gtk3
+	@$(MAKE) build-openbox
 	@$(MAKE) build-wine
 	@$(MAKE) build-rootfs
 	@$(MAKE) create-iso
