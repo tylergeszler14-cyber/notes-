@@ -2,7 +2,7 @@
 
 ## 📦 ISO File Available
 
-**File**: `linux-os/iso/linux-wine.iso` (17 MB)
+**File**: `linux-os/iso/linux-wine.iso` (12 MB)
 
 This is a minimal, bootable Linux operating system pre-compiled and ready to use.
 
@@ -27,13 +27,13 @@ sudo dd if=linux-wine.iso of=/dev/sdX bs=4M && sync
 
 ## 📋 What's Inside
 
-- **Linux Kernel**: 5.15.0 (minimal x86_64 configuration, 5.4 MB)
+- **Linux Kernel**: 7.0.0-rc6 (x86_64, initramfs built-in, 6.7 MB)
 - **Shell/Utilities**: BusyBox 1.36.1 (2.4 MB static binary)
-- **Boot Loader**: GRUB 2.12 (EFI & MBR support)
-- **Init System**: SysV-style boot system
-- **Initramfs**: Compressed root filesystem (6.5 MB)
+- **Boot Loader**: GRUB 2.12 (BIOS/MBR hybrid support)
+- **Init System**: Custom /init script with serial console support
+- **Initramfs**: Embedded in kernel (no separate ramdisk needed)
 
-**Total ISO Size**: 17 MB (extremely minimal!)
+**Total ISO Size**: 12 MB (extremely minimal!)
 
 ## 🔧 Included Commands
 

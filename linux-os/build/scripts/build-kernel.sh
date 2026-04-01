@@ -25,9 +25,6 @@ cd "$KERNEL_SRC"
 
 # Create minimal kernel config
 echo "→ Generating minimal kernel configuration..."
-if [ -n "$INITRAMFS_FILE" ]; then
-    echo "  Using built-in initramfs: $INITRAMFS_FILE"
-fi
 cat > .config << 'EOF'
 # Minimal Linux kernel config for x86_64
 CONFIG_64BIT=y
@@ -83,10 +80,11 @@ CONFIG_USB_UHCI_HCD=y
 CONFIG_USB_HID=y
 CONFIG_HID=y
 
-# Initramfs/RAM disk support
+# Initramfs/RAM disk support (built-in initramfs)
 CONFIG_BLK_DEV_INITRD=y
 CONFIG_BLK_DEV_RAM=y
 CONFIG_BLK_DEV_RAM_SIZE=131072
+CONFIG_INITRAMFS_SOURCE=""
 
 # Remove bloat
 CONFIG_DEBUG_KERNEL=n
@@ -126,6 +124,12 @@ CONFIG_FLATMEM=y
 CONFIG_FLAT_NODE_MAP=y
 CONFIG_PAGEFLAGS_EXTENDED=y
 EOF
+
+# Set initramfs source if provided
+if [ -n "$INITRAMFS_FILE" ] && [ -e "$INITRAMFS_FILE" ]; then
+    echo "  Embedding initramfs from: $INITRAMFS_FILE"
+    sed -i "s|CONFIG_INITRAMFS_SOURCE=\"\"|CONFIG_INITRAMFS_SOURCE=\"$INITRAMFS_FILE\"|" .config
+fi
 
 # Oldconfig to handle missing options
 yes "" | make oldconfig >/dev/null 2>&1
