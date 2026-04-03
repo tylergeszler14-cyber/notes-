@@ -1,0 +1,27 @@
+{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo '[context-mgmt] Subagent finished. Consider running /compact to compress history.'"
+          }
+        ]
+      }
+    ]
+  },
+  "subagents": {
+    "defaultModel": "claude-sonnet-4-6",
+    "agents": [
+      "code-reviewer",
+      "debugger",
+      "docs-writer",
+      "file-explorer"
+    ]
+  }
+}
