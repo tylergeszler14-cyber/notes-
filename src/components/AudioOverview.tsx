@@ -3,6 +3,26 @@ import { Mic, Play, Pause, Loader2, Volume2, Download } from 'lucide-react';
 import { Source, Theme } from '../types';
 import * as gemini from '../services/gemini';
 
+function buildValidatedDataUrl(base64Audio: string): string {
+  try {
+    // Validate that the input contains only valid base64 characters
+    if (!/^[A-Za-z0-9+/]*={0,2}$/.test(base64Audio)) {
+      throw new Error('Invalid parameter');
+    }
+    
+    const url = new URL(`data:audio/wav;base64,${base64Audio}`);
+    
+    // Ensure it's a data URL with the expected protocol
+    if (url.protocol !== 'data:') {
+      throw new Error('Invalid protocol');
+    }
+    
+    return url.href;
+  } catch {
+    throw new Error('Invalid URL');
+  }
+}
+
 interface AudioOverviewProps {
   sources: Source[];
   theme: Theme;
@@ -22,7 +42,8 @@ export default function AudioOverview({ sources, theme }: AudioOverviewProps) {
       const base64Audio = await gemini.generateAudioOverview(combinedText);
       
       if (base64Audio) {
-        const blob = await fetch(`data:audio/wav;base64,${base64Audio}`).then(r => r.blob());
+        const dataUrl = buildValidatedDataUrl(base64Audio);
+        const blob = await fetch(dataUrl).then(r => r.blob());
         const url = URL.createObjectURL(blob);
         setAudioUrl(url);
       }
